@@ -151,7 +151,6 @@ class TwitterListener(StreamListener):
 		retweet_count = status.retweet_count #Int: number of times tweet was retweeted
 		favorite_count = status.favorite_count #Int: number of times tweet was favorited
 		author = status.user.screen_name #Str: username of the tweet's author
-
 		# Store hashtags as comma seperated string
 		hashtags = self.twitter_analyzer.store_hashtags(text)
 
