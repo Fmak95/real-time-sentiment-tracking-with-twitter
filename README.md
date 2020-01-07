@@ -38,3 +38,9 @@ password = 'password123'
 
 ### Settings
 The keyword used for searching tweets can be changed by altering the ```settings.py``` file.
+
+## Run
+To start the application open two terminals:
+- In the first terminal, type: ```python streamer.py``` this will start pulling data from twitter and saving it to the mySQL database.
+- In the second terminal, type: ```python app.py``` this will launch the dashboard which can be viewed at the following url:
+```http://127.0.0.1:8050/```
