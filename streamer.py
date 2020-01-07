@@ -3,6 +3,7 @@ import tweepy
 import mysql.connector
 from tweepy.streaming import StreamListener
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+import settings
 import json
 import pdb
 import re
@@ -50,7 +51,7 @@ class DatabaseManager():
 			)
 		self.mycursor = self.mydb.cursor()
 
-		print(self.mydb)
+		# print(self.mydb)
 
 	def create_database(self, database_name = "twitter_database"): 
 		self.mycursor.execute("CREATE DATABASE IF NOT EXISTS {}".format(database_name))
@@ -181,7 +182,7 @@ class TwitterListener(StreamListener):
 		self.database_manager.insert_data(id, created_at, author, text, retweet_count, favorite_count,
 		neg_score, neu_score, pos_score, compound_score, hashtags, follower_count, search_words[0])
 
-		self.database_manager.debug()
+		# self.database_manager.debug()
 		self.counter += 1
 
 	def on_error(self, error_code):
@@ -202,7 +203,7 @@ class TwitterStreamer():
 		stream.filter(track = search_words, languages=["en"])
 
 if __name__ == '__main__':
-	search_words = ["Trump"]
+	search_words = settings.TRACK_WORDS
 	twitter_streamer = TwitterStreamer()
 	twitter_streamer.stream_tweets(search_words)
 

@@ -1,3 +1,4 @@
+import settings
 import datetime
 import mysql.connector
 import dash
@@ -16,6 +17,8 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 app.layout = html.Div(children = [
 		html.H2('Real-Time Twitter Sentiment Analysis for Analyzing Public Opinion',
+			style = {'textAlign': 'center'}),
+		html.H3('Currently Searching Twitter for the Keyword "{}"'.format(settings.TRACK_WORDS[0]),
 			style = {'textAlign': 'center'}),
 		html.Div(id='live-update-graph-top'),
 		html.Div(id='live-update-graph-bottom'),
@@ -106,12 +109,12 @@ def update_graph_top(n):
 					figure = {
 						'data': [
 							go.Pie(
-									labels = ['Neutral', 'Positive', 'Negative'],
-									values = [result[result['sentiment'] == 0].id.sum(),
+									labels = ['Negative', 'Positive', 'Neutral'],
+									values = [result[result['sentiment'] == -1].id.sum(),
 										result[result['sentiment'] == 1].id.sum(),
-										result[result['sentiment'] == -1].id.sum()],
+										result[result['sentiment'] == 0].id.sum()],
 									name = 'pieChart',
-									marker_colors = ['rgb(131, 90, 241)','rgb(255, 50, 50)','rgb(184, 247, 212)'],
+									marker_colors = ['rgb(184, 247, 212)','rgb(255, 50, 50)','rgb(131, 90, 241)'],
 								)
 						]
 					}
