@@ -7,6 +7,8 @@ import json
 import pdb
 import re
 
+## TO DO: Get User follower count and add it into the database!
+
 class TwitterAnalyzer():
 
 	def store_hashtags(self, text):
@@ -66,6 +68,7 @@ class DatabaseManager():
 			pos_score FLOAT,\
 			compound_score FLOAT,\
 			hashtags VARCHAR(255),\
+			follower_count INT,\
 			search_words VARCHAR(255))".format(table_name))
 
 	#Emojis require that you use utf8mb4 encoding instead of the traditional utf8
@@ -76,14 +79,14 @@ class DatabaseManager():
 
 
 	def insert_data(self, id, created_at, author, text, retweet_count, favorite_count,
-		neg_score, neu_score, pos_score, compound_score, hashtags, search_words, table_name="tweets"):
+		neg_score, neu_score, pos_score, compound_score, hashtags, follower_count, search_words, table_name="tweets"):
 		sql = """
-			INSERT INTO {} (id, created_at, author, text, retweet_count, favorite_count, neg_score, neu_score, pos_score, compound_score, hashtags, search_words)
-				VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+			INSERT INTO {} (id, created_at, author, text, retweet_count, favorite_count, neg_score, neu_score, pos_score, compound_score, hashtags, follower_count, search_words)
+				VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 		""".format(table_name)
 
 		val = (id, created_at, author, text, retweet_count, favorite_count, neg_score,
-			neu_score, pos_score, compound_score, hashtags, search_words)
+			neu_score, pos_score, compound_score, hashtags, follower_count, search_words)
 
 		self.mycursor.execute(sql, val)
 		self.mydb.commit()
@@ -151,6 +154,8 @@ class TwitterListener(StreamListener):
 		retweet_count = status.retweet_count #Int: number of times tweet was retweeted
 		favorite_count = status.favorite_count #Int: number of times tweet was favorited
 		author = status.user.screen_name #Str: username of the tweet's author
+		follower_count = status.user.followers_count #Int: number of people who follower the user
+
 		# Store hashtags as comma seperated string
 		hashtags = self.twitter_analyzer.store_hashtags(text)
 
@@ -168,13 +173,13 @@ class TwitterListener(StreamListener):
 		compound_score = sentiment_score['compound']
 
 		### Print Statements for DEBUGGING ###
-		print("Text: " + text)
-		print("Score: {}".format(sentiment_score))
+		# print("Text: " + text)
+		# print("Score: {}".format(sentiment_score))
 		# print("Hashtags: {}".format(hashtags))
 
 		# # # Adding the Twitter Data into mySQL Database # # #
 		self.database_manager.insert_data(id, created_at, author, text, retweet_count, favorite_count,
-		neg_score, neu_score, pos_score, compound_score, hashtags, search_words[0])
+		neg_score, neu_score, pos_score, compound_score, hashtags, follower_count, search_words[0])
 
 		self.database_manager.debug()
 		self.counter += 1

@@ -67,6 +67,13 @@ def update_graph_top(n):
 	hashtag_counter = Counter(all_hashes)
 	top_hashes = hashtag_counter.most_common()[:10]
 
+	#Get the tweets from the people with most followers
+	top_followers = df.sort_values(by='follower_count', ascending=False).iloc[:10]
+	tweets_from_top_followers = top_followers.text.values
+	author_top_followers = top_followers.author.values
+	top_following_count = top_followers.follower_count.values
+
+
 	# Create the graphs: Timeseries Graph and Pie Chart
 	children = [
 		html.Div([
@@ -110,7 +117,6 @@ def update_graph_top(n):
 					}
 				)], style = {'width': '27%', 'display': 'inline-block'}),
 		html.Div([
-			html.H3('Most Used Hashtags in the Last 10 Mins'),
 			dcc.Graph(
 					figure = {
 						'data': [
@@ -121,11 +127,37 @@ def update_graph_top(n):
 								)
 						],
 						'layout': {
+							'title': 'Most Used Hashtags in the Last 10 Mins',
 							'xaxis': {'automargin': True},
 							'yaxis': {'automargin': True}
 						}
 					}
-				)], style = {'width': '50%', 'display': 'inline-block'})
+				)], style = {'width': '45%', 'display': 'inline-block'}),
+		html.Div([
+			dcc.Graph(
+					figure = {
+						'data': [
+							go.Table(
+									header = {
+										'values': ['Username', 'Tweet', 'Follower Count'],
+										'align': 'left',
+										'fill_color': 'rgb(107,174,214)',
+										'font': {'size': 15}
+									},
+									cells = {
+										'values': [author_top_followers, tweets_from_top_followers, top_following_count],
+										'align': 'left',
+										'fill_color': 'rgb(189, 215, 231)'
+									})
+						],
+						'layout': {
+							'title': 'Tweets from Users with Most Followers',
+							'xaxis': {'automargin': True},
+							'yaxis': {'automargin': True}
+						}
+
+					}
+				)], style = {'width': '55%', 'display': 'inline-block'})
 	]
 	return children
 
