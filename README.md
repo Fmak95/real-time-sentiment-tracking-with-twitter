@@ -1,7 +1,7 @@
 # Real-Time-Sentiment-Tracking-with-Twitter
 A real-time web app based on data pipelines using streaming Twitter data, automated sentiment analysis, and MySQL database.
 
-![]("https://imgur.com/kUqihyf")
+![]("https://imgur.com/kUqihyf.gif")
 
 
 ## Getting Started
