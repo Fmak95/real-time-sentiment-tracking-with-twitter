@@ -35,3 +35,6 @@ host = 'localhost'
 user = 'root'
 password = 'password123'
 ```
+
+### Settings
+The keyword used for searching tweets can be changed by altering the ```settings.py``` file.
